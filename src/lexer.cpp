@@ -36,6 +36,52 @@ void Lexer::scan_token() {
     case '+':
         add_token(TokenType::PLUS);
         break;
+    case '*':
+        add_token(TokenType::STAR);
+        break;
+     case '!':
+        if (match('='))
+            add_token(TokenType::NOT_EQUAL);
+        else
+            add_token(TokenType::NOT);
+        break;
+    case '=':
+        if (match('='))
+            add_token(TokenType::EQUAL_EQUAL);
+        else
+            add_token(TokenType::EQUAL);
+        break;
+    case '<':
+        if (match('='))
+            add_token(TokenType::LESS_EQUAL);
+        else
+            add_token(TokenType::LESS);
+        break;
+    case '>':
+        if (match('='))
+            add_token(TokenType::GREATER_EQUAL);
+        else
+            add_token(TokenType::GREATER);
+        break;
+    case '/':
+    if (match('/')) {
+        while (peek() != '\n' && !is_at_end()) {
+            advance();
+        }
+    } else {
+        add_token(TokenType::SLASH);
+    }
+    break;
+    case ' ':
+    case '\r':
+    case '\t':
+    break;
+    case '\n':
+        line++;
+        break;
+    case '"':
+        string();
+        break;
     default:
         Dastruf::error(line, "Unexpected character");
         break;
@@ -73,4 +119,28 @@ void Lexer::add_token(TokenType type) {
 void Lexer::add_token(TokenType type, const std::string &literal) {
         std::string text = source.substr(start, current - start);
         tokens.emplace_back(type, text, literal, line);
+}
+
+void Lexer::string() {
+    while (peek() != '"' && !is_at_end()) {
+        // If a newline is encountered, the string is unterminated.
+        if (peek() == '\n') {
+            Dastruf::error(line, "Error: Unterminated string literal");
+            return;
+        }
+        advance();
+    }
+    if (is_at_end()) {
+        Dastruf::error(line, "Error: Unterminated string literal.");
+        return;
+    }
+
+    // Closing quote: advance past the quote.
+    advance();
+
+    // Extract the string value between the quotes.
+    std::string value = source.substr(start + 1, current - start - 2); // Don't include the quotes.
+
+
+    add_token(TokenType::STRING, value);
 }

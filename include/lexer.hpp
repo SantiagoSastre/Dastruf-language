@@ -23,6 +23,7 @@ class Lexer {
         void add_token(TokenType type);
         void add_token(TokenType type, const std::string &literal);
         bool match(char expected);
+        void string();
         char peek();
 };
 
