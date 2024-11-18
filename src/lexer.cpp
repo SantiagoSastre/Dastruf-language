@@ -1,5 +1,5 @@
 #include "lexer.hpp"
-
+#include "dastruf.hpp"
 
 Lexer::Lexer(const std::string &source) : source(source), start(0), current(0), line(1) {}
 
@@ -16,7 +16,31 @@ std::vector<Token> Lexer::scan_tokens()
 }
 
 void Lexer::scan_token() {
+    char c = advance();
+    switch (c)
+    {
+    case '(':
+        add_token(TokenType::LEFT_PAREN);
+        break;
+    case ')':
+        add_token(TokenType::RIGHT_PAREN);
+        break;
+        add_token(TokenType::COMMA);
+        break;
+    case '.':
+        add_token(TokenType::DOT);
+        break;
+    case '-':
+        add_token(TokenType::MINUS);
+        break;
+    case '+':
+        add_token(TokenType::PLUS);
+        break;
+    default:
+        Dastruf::error(line, "Unexpected character");
+        break;
 
+}
 }
 
 bool Lexer::is_at_end() const {
