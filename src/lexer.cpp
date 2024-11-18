@@ -1,5 +1,6 @@
 #include "lexer.hpp"
 
+
 Lexer::Lexer(const std::string &source) : source(source), start(0), current(0), line(1) {}
 
 std::vector<Token> Lexer::scan_tokens()
@@ -14,7 +15,9 @@ std::vector<Token> Lexer::scan_tokens()
     return tokens;
 }
 
+void Lexer::scan_token() {
 
+}
 
 bool Lexer::is_at_end() const {
         return current >= source.length();
