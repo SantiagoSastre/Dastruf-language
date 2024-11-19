@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <variant>
 #include "token.hpp"
 
 
@@ -18,13 +19,19 @@ class Lexer {
         int current;
         int line;
         bool is_at_end() const;
+        bool is_digit(char c) const;
+        bool is_alpha(char c) const;
+        bool is_alphanumeric(char c) const;
         void scan_token();
         char advance();
         void add_token(TokenType type);
-        void add_token(TokenType type, const std::string &literal);
+        void add_token(TokenType type, const std::variant<std::monostate, std::string, int, float, bool>& literal);
         bool match(char expected);
         void string();
-        char peek();
+        void number();
+        void identifier();
+        char peek() const;
+        char peek_next() const;
 };
 
 #endif

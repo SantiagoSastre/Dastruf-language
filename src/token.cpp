@@ -29,7 +29,9 @@ std::string Token::token_type_to_string(TokenType type) const {
         // Literals
         case TokenType::IDENTIFIER: return "IDENTIFIER";
         case TokenType::STRING_LITERAL: return "STRING_LITERAL";
-        case TokenType::NUMBER: return "NUMBER";
+        case TokenType::INT_LITERAL: return "INT_LITERAL";
+        case TokenType::FLOAT_LITERAL: return "FLOAT_LITERAL";
+
 
         // Keywords
         case TokenType::AND: return "AND";
