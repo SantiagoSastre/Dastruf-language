@@ -1,5 +1,6 @@
 #include "token.hpp"
 #include <sstream>
+#include <variant>
 
 
 
@@ -59,10 +60,22 @@ std::string Token::token_type_to_string(TokenType type) const {
     }
 };
 
-Token::Token(TokenType type, std::string lexeme, std::string literal, int line) : type(type), lexeme(lexeme), literal(literal), line(line) {}
+std::string Token::literal_to_string(const std::variant<std::monostate, std::string, int, float, bool>& l)  {
+    return std::visit([](auto&& arg) -> std::string {
+        if constexpr (std::is_same_v<std::decay_t<decltype(arg)>, std::monostate>) {
+            return "null"; 
+        } else {
+            std::stringstream ss;
+            ss << arg;
+            return ss.str();
+        }
+    }, l);
+}
 
-std::string Token::to_string() const {
+Token::Token(TokenType type, std::string lexeme, std::variant<std::monostate, std::string, int, float, bool> literal, int line) : type(type), lexeme(lexeme), literal(literal), line(line) {}
+
+std::string Token::to_string() {
     std::ostringstream oss;
-    oss << token_type_to_string(type) << " " << lexeme << " " << literal;
+    oss << token_type_to_string(type) << " " << lexeme << " " << literal_to_string(literal);
     return oss.str();
 }
