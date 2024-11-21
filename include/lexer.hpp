@@ -4,8 +4,9 @@
 #include <string>
 #include <vector>
 #include <variant>
+#include <unordered_map>
 #include "token.hpp"
-
+#include "token_type.hpp"
 
 
 class Lexer {
@@ -15,6 +16,7 @@ class Lexer {
     private:
         std::string source;
         std::vector<Token> tokens;
+        static const std::unordered_map<std::string, TokenType> keywords;
         int start;
         int current;
         int line;

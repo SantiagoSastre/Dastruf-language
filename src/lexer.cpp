@@ -1,9 +1,35 @@
 #include "lexer.hpp"
 #include "dastruf.hpp"
 #include <cstdlib>
-#include <variant>
+
 
 Lexer::Lexer(const std::string &source) : source(source), start(0), current(0), line(1) {}
+
+
+
+const std::unordered_map<std::string, TokenType> Lexer::keywords = {
+    {"and", TokenType::AND},
+    {"class", TokenType::CLASS},
+    {"false", TokenType::FALSE},
+    {"for", TokenType::FOR},
+    {"if", TokenType::IF},
+    {"elif", TokenType::ELIF},
+    {"else", TokenType::ELSE},
+    {"null", TokenType::NULL_TOKEN},
+    {"or", TokenType::OR},
+    {"p", TokenType::P},
+    {"return", TokenType::RETURN},
+    {"super", TokenType::SUPER},
+    {"this", TokenType::THIS},
+    {"true", TokenType::TRUE},
+    {"string", TokenType::STRING},
+    {"int", TokenType::INT},
+    {"bool", TokenType::BOOL},
+    {"float", TokenType::FLOAT},
+    {"while", TokenType::WHILE},
+    {"end", TokenType::END}
+};
+
 
 std::vector<Token> Lexer::scan_tokens()
 {
@@ -194,6 +220,14 @@ void Lexer::identifier() {
     {
         advance();
     }
-    add_token(TokenType::IDENTIFIER);
-    
+    std::string text = source.substr(start, current - start);
+    TokenType type;
+    std::unordered_map<std::string, TokenType>::const_iterator it = keywords.find(text);
+    if (it == keywords.end()) {
+        type = TokenType::IDENTIFIER;
+    } else {
+        type = it->second;
+    }
+    add_token(type);
+
 }
